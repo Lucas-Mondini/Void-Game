@@ -30,7 +30,6 @@ AThirdPersonCharacter::AThirdPersonCharacter() {
 	GetCharacterMovement()->RotationRate = FRotator(0, yawRotationFactor, 0);
 
 }
-
 void AThirdPersonCharacter::BeginPlay() {
 	Super::BeginPlay();
 	
@@ -40,6 +39,18 @@ void AThirdPersonCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 }
+
+void AThirdPersonCharacter::drawSheatheWeapon() {
+	if(equippedWeapon)
+		if(!isInDrawSheatheAnim) {
+			
+			if(isEquippedWeapon)
+				sheatheWeapon();
+			else
+				drawWeapon();
+		}
+}
+
 
 void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -51,6 +62,7 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("LookUp", this, &AThirdPersonCharacter::LookUp);
 	PlayerInputComponent->BindAxis("LookRight", this, &AThirdPersonCharacter::LookSide);
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AThirdPersonCharacter::Action);
+	PlayerInputComponent->BindAction("WeaponDrawSheathe", IE_Pressed, this, &AThirdPersonCharacter::drawSheatheWeapon);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
 }
@@ -88,7 +100,7 @@ void AThirdPersonCharacter::Action() {
 	for(int i = 0; i < weapons.Num(); i++) {
 		ABaseWeapon* weapon = Cast<ABaseWeapon>(weapons[i]);
 		if(weapon && !weapon->IsPendingKill() && this->equippedWeapon != weapon) {
-			if(equipeWeapon(weapon))
+			if(equipNewWeaponBack(weapon))
 				return;
 		}
 	}
@@ -97,7 +109,7 @@ void AThirdPersonCharacter::Action() {
 		UE_LOG(LogTemp, Warning, TEXT("equipped weapon = %s"), *this->equippedWeapon->GetName());
 }
 
-bool AThirdPersonCharacter::equipeWeapon(ABaseWeapon* newWeapon) {
+bool AThirdPersonCharacter::equipNewWeaponBack(ABaseWeapon* newWeapon) {
 	UE_LOG(LogTemp, Warning, TEXT("object name = %s"), *newWeapon->GetName());
 	try {
 		this->equippedWeapon = newWeapon;
@@ -105,7 +117,31 @@ bool AThirdPersonCharacter::equipeWeapon(ABaseWeapon* newWeapon) {
 		UE_LOG(LogTemp, Error, TEXT("An error ocurred on equip weapon code: %i"), e);
 		return false;
 	}
-	equippedWeapon->pickUpWeapon(this);
+	equippedWeapon->AttachToBack(this);
 	return true;
+}
+
+bool AThirdPersonCharacter::EquipWeaponHand() {
+	if(this->equippedWeapon) {
+		UE_LOG(LogTemp, Warning, TEXT("object name = %s"), *this->equippedWeapon->GetName());
+		this->equippedWeapon->AttachToHand(this);
+		return true;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("no weapon equiped"));
+	}
+	return false;
+}
+
+bool AThirdPersonCharacter::EquipWeaponBack() {
+	if(this->equippedWeapon) {
+		UE_LOG(LogTemp, Warning, TEXT("object name = %s"), *this->equippedWeapon->GetName());
+		this->equippedWeapon->AttachToBack(this);
+		return true;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("no weapon equiped"));
+	}
+	return false;
 }
 

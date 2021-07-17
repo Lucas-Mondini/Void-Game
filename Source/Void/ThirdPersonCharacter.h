@@ -20,13 +20,25 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void LookUp(float lookUpRate);
 	void LookSide(float lookSideRate);
 	void Action();
-	bool equipeWeapon(class ABaseWeapon* newWeapon);
+	bool equipNewWeaponBack(class ABaseWeapon* newWeapon);
+
+	UFUNCTION(BlueprintCallable, Category="equip Weapon")
+		bool EquipWeaponHand();
+	UFUNCTION(BlueprintCallable, Category="equip Weapon")
+		bool EquipWeaponBack();
 	
 public:
 	AThirdPersonCharacter();
 
 	FORCEINLINE ABaseWeapon* getEquipedWeapon() const {return this->equippedWeapon;}
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "equippedWeapon")
+	bool isEquippedWeapon = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,  Category = "isInAnimation")
+	bool isInDrawSheatheAnim = false;
+
+	void drawSheatheWeapon();
 protected:
 	virtual void BeginPlay() override;
 	
@@ -44,6 +56,14 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccsess = "true"));
 	float lookUpRate = 45;
+
+
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void drawWeapon();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void sheatheWeapon();
 
 	
 public:	

@@ -24,10 +24,14 @@ ABaseWeapon::ABaseWeapon()
 
 }
 
-void ABaseWeapon::pickUpWeapon(AThirdPersonCharacter* player) {
+void ABaseWeapon::AttachToBack(AThirdPersonCharacter* player) {
 	weaponMesh->SetSimulatePhysics(false);
 	RootComponent->SetUsingAbsoluteRotation(false);
 	this->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("DefaultWeapon_back"));
+}
+
+void ABaseWeapon::AttachToHand(AThirdPersonCharacter* player) {
+	this->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("DefaultWeapon_hand"));
 }
 
 // Called when the game starts or when spawned
