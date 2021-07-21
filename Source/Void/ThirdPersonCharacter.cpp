@@ -63,6 +63,8 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("LookRight", this, &AThirdPersonCharacter::LookSide);
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AThirdPersonCharacter::Action);
 	PlayerInputComponent->BindAction("WeaponDrawSheathe", IE_Pressed, this, &AThirdPersonCharacter::drawSheatheWeapon);
+	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AThirdPersonCharacter::Dodge);
+	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
 }
@@ -75,6 +77,7 @@ void AThirdPersonCharacter::MoveForward(float MoveRate) {
 		AddMovementInput(direction, MoveRate);
 	}
 }
+
 void AThirdPersonCharacter::MoveRight(float MoveRate) {
 	if(Controller && MoveRate)
 	{
@@ -91,6 +94,15 @@ void AThirdPersonCharacter::LookUp(float lookRate) {
 
 void AThirdPersonCharacter::LookSide(float lookRate) {
 	AddControllerYawInput(GetWorld()->GetDeltaSeconds() * lookRate * this->turnRightRate);
+}
+
+void AThirdPersonCharacter::Dodge() {
+	float y = InputComponent->GetAxisValue("MoveFront");
+	float x = InputComponent->GetAxisValue("MoveRight");
+	if(x || y)
+		Roll();
+	else
+		Avoid();
 }
 
 void AThirdPersonCharacter::Action() {
@@ -144,4 +156,3 @@ bool AThirdPersonCharacter::EquipWeaponBack() {
 	}
 	return false;
 }
-

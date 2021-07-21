@@ -14,6 +14,9 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	ABaseWeapon* equippedWeapon = nullptr;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool rolling = false;
 
 	void MoveForward(float MoveRate);
 	void MoveRight(float MoveRate);
@@ -22,6 +25,8 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void Action();
 	bool equipNewWeaponBack(class ABaseWeapon* newWeapon);
 
+
+	//functions related to animations
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 		bool EquipWeaponHand();
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
@@ -39,6 +44,7 @@ public:
 	bool isInDrawSheatheAnim = false;
 
 	void drawSheatheWeapon();
+	void Dodge();
 protected:
 	virtual void BeginPlay() override;
 	
@@ -59,11 +65,17 @@ protected:
 
 
 
+	//animation related function
 	UFUNCTION(BlueprintImplementableEvent)
 	void drawWeapon();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void sheatheWeapon();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="RollAvoid")
+		bool Roll();
+	UFUNCTION(BlueprintImplementableEvent, Category="RollAvoid")
+		bool Avoid();
 
 	
 public:	
