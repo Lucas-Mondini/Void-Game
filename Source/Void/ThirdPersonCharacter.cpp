@@ -44,10 +44,16 @@ void AThirdPersonCharacter::drawSheatheWeapon() {
 	if(equippedWeapon)
 		if(!isInDrawSheatheAnim) {
 			
-			if(isEquippedWeapon)
+			if(isEquippedWeapon) {
+				UCharacterMovementComponent *movement = Cast<UCharacterMovementComponent>(GetMovementComponent());
+				movement->MaxWalkSpeed = 600;
 				sheatheWeapon();
-			else
+			}
+			else {
+				UCharacterMovementComponent *movement = Cast<UCharacterMovementComponent>(GetMovementComponent());
+				movement->MaxWalkSpeed = 300;
 				drawWeapon();
+			}
 		}
 }
 
@@ -71,6 +77,12 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void AThirdPersonCharacter::MoveForward(float MoveRate) {
 	if(Controller && MoveRate) {
+		if(MoveRate < 0 && isEquippedWeapon) {
+			bUseControllerRotationYaw = true;
+		}
+		else 
+			bUseControllerRotationYaw = false;
+		
 		const FRotator rotation = Controller->GetControlRotation();
 		const FRotator Yaw(0, rotation.Yaw, 0);
 		const FVector direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::X);
@@ -81,6 +93,8 @@ void AThirdPersonCharacter::MoveForward(float MoveRate) {
 void AThirdPersonCharacter::MoveRight(float MoveRate) {
 	if(Controller && MoveRate)
 	{
+		if(isEquippedWeapon)
+			bUseControllerRotationYaw = true;
 		const FRotator rotation = Controller->GetControlRotation();
 		const FRotator Yaw(0, rotation.Yaw, 0);
 		const FVector direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y);
