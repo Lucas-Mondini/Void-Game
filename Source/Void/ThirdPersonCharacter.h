@@ -17,6 +17,12 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool rolling = false;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool canMove = true;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool canDodge = true;
 
 	void MoveForward(float MoveRate);
 	void MoveRight(float MoveRate);

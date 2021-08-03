@@ -77,28 +77,33 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void AThirdPersonCharacter::MoveForward(float MoveRate) {
 	if(Controller && MoveRate) {
-		if(MoveRate < 0 && isEquippedWeapon) {
-			bUseControllerRotationYaw = true;
+		if(canMove) {
+			if(MoveRate < 0 && isEquippedWeapon) {
+				bUseControllerRotationYaw = true;
+			}
+			else 
+				bUseControllerRotationYaw = false;
+			
+			const FRotator rotation = Controller->GetControlRotation();
+			const FRotator Yaw(0, rotation.Yaw, 0);
+			const FVector direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::X);
+			AddMovementInput(direction, MoveRate);
 		}
-		else 
-			bUseControllerRotationYaw = false;
-		
-		const FRotator rotation = Controller->GetControlRotation();
-		const FRotator Yaw(0, rotation.Yaw, 0);
-		const FVector direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::X);
-		AddMovementInput(direction, MoveRate);
 	}
 }
 
 void AThirdPersonCharacter::MoveRight(float MoveRate) {
 	if(Controller && MoveRate)
 	{
-		if(isEquippedWeapon)
-			bUseControllerRotationYaw = true;
-		const FRotator rotation = Controller->GetControlRotation();
-		const FRotator Yaw(0, rotation.Yaw, 0);
-		const FVector direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y);
-		AddMovementInput(direction, MoveRate);
+		if(canMove) {
+			if(isEquippedWeapon)
+				bUseControllerRotationYaw = true;
+			
+			const FRotator rotation = Controller->GetControlRotation();
+			const FRotator Yaw(0, rotation.Yaw, 0);
+			const FVector direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y);
+			AddMovementInput(direction, MoveRate);
+		}
 	}
 }
 
@@ -113,10 +118,20 @@ void AThirdPersonCharacter::LookSide(float lookRate) {
 void AThirdPersonCharacter::Dodge() {
 	float y = InputComponent->GetAxisValue("MoveFront");
 	float x = InputComponent->GetAxisValue("MoveRight");
-	if(x || y)
-		Roll();
-	else
-		Avoid();
+	if(x || y) {
+		if(canDodge) {
+			canMove = false;		
+			Roll();
+			canDodge = false;
+		}
+	}
+	else {
+		if(canDodge) {
+			canMove = false;
+			Avoid();
+			canDodge = false;
+		}
+	}
 }
 
 void AThirdPersonCharacter::Action() {
