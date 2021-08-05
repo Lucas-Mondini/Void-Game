@@ -5,13 +5,6 @@
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
 
-enum WeaponType
-{
-	GreatSword = 1,
-	Sword,
-	axe
-};
-
 UCLASS()
 class VOID_API ABaseWeapon : public AActor
 {
@@ -33,9 +26,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
     	void AttachToHand(class AThirdPersonCharacter* player);
-
-	//by default the weapon type is a great Sword
-	WeaponType weaponType  = WeaponType::GreatSword;
 
 protected:
 	virtual void BeginPlay() override;

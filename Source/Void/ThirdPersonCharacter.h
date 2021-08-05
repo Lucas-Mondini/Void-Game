@@ -4,16 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "ThirdPersonCharacter.generated.h"
 
-class ABaseWeapon;
+#include "ThirdPersonCharacter.generated.h"
 UCLASS()
 class VOID_API AThirdPersonCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	ABaseWeapon* equippedWeapon = nullptr;
+	class AWeaponItem* equippedWeapon = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool rolling = false;
@@ -24,12 +23,15 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool canDodge = true;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "Inventory", meta = (AllowPrivateAccess = "true"))
+	class UInventoryComponent* Inventory;
+
 	void MoveForward(float MoveRate);
 	void MoveRight(float MoveRate);
 	void LookUp(float lookUpRate);
 	void LookSide(float lookSideRate);
 	void Action();
-	bool equipNewWeaponBack(class ABaseWeapon* newWeapon);
+	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
 
 
 	//functions related to animations
@@ -41,7 +43,7 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 public:
 	AThirdPersonCharacter();
 
-	FORCEINLINE ABaseWeapon* getEquipedWeapon() const {return this->equippedWeapon;}
+	FORCEINLINE AWeaponItem* getEquipedWeapon() const {return this->equippedWeapon;} 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "equippedWeapon")
 	bool isEquippedWeapon = false;
@@ -51,6 +53,8 @@ public:
 
 	void drawSheatheWeapon();
 	void Dodge();
+
+	
 protected:
 	virtual void BeginPlay() override;
 	

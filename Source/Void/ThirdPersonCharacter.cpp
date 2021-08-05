@@ -5,6 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "interactable/Item.h"
+#include "interactable/WeaponItem.h"
+#include "Inventory/InventoryComponent.h"
 #include "Weapon/BaseWeapon.h"
 
 AThirdPersonCharacter::AThirdPersonCharacter() {
@@ -21,6 +24,9 @@ AThirdPersonCharacter::AThirdPersonCharacter() {
 
 	actionArea = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collection area"));
 	actionArea->SetupAttachment(RootComponent);
+
+	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	Inventory->setOwner(this);
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -135,22 +141,45 @@ void AThirdPersonCharacter::Dodge() {
 }
 
 void AThirdPersonCharacter::Action() {
-	TArray<AActor*> weapons;
-	actionArea->GetOverlappingActors(weapons, ABaseWeapon::StaticClass());
 
-	for(int i = 0; i < weapons.Num(); i++) {
-		ABaseWeapon* weapon = Cast<ABaseWeapon>(weapons[i]);
-		if(weapon && !weapon->IsPendingKill() && this->equippedWeapon != weapon) {
-			if(equipNewWeaponBack(weapon))
-				return;
+	TArray<AActor*> Items;
+	actionArea->GetOverlappingActors(Items, AItem::StaticClass());
+	for (int i = 0; i < Items.Num(); i++) {
+		AItem *item = Cast<AItem>(Items[i]);
+		if(item && !item->IsPendingKill()) {
+			//if the item is a weapon and the player isn't equipped with a weapon
+			if(!equippedWeapon && item->itemType == AItem::Weapon) {
+				//the player will equip the weapon
+				equipNewWeaponBack(Cast<AWeaponItem>(item));
+				
+			} 
+			GLog->Log("acao");
+			Inventory->AddItem(item);
+			
 		}
 	}
 
-	if(this->equippedWeapon)
-		UE_LOG(LogTemp, Warning, TEXT("equipped weapon = %s"), *this->equippedWeapon->GetName());
+	//Action outdated implementation 
+	/*
+	 * TArray<AActor*> weapons;
+	 * actionArea->GetOverlappingActors(weapons, ABaseWeapon::StaticClass());
+	 *
+	 * for(int i = 0; i < weapons.Num(); i++) {
+	 * 	ABaseWeapon* weapon = Cast<ABaseWeapon>(weapons[i]);
+	 * 	if(weapon && !weapon->IsPendingKill() && this->equippedWeapon != weapon) {
+	 * 		if(equipNewWeaponBack(weapon))
+	 * 			return;
+	 * 	}
+	 * }
+	 *
+	 * if(this->equippedWeapon)
+	 *  	UE_LOG(LogTemp, Warning, TEXT("equipped weapon = %s"), *this->equippedWeapon->GetName());
+	 * 
+	 * 	
+	 */
 }
 
-bool AThirdPersonCharacter::equipNewWeaponBack(ABaseWeapon* newWeapon) {
+bool AThirdPersonCharacter::equipNewWeaponBack(AWeaponItem* newWeapon) {
 	UE_LOG(LogTemp, Warning, TEXT("object name = %s"), *newWeapon->GetName());
 	try {
 		this->equippedWeapon = newWeapon;
