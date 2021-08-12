@@ -16,6 +16,9 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool rolling = false;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool inventoryOpened = false;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool canMove = true;
@@ -32,6 +35,7 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void LookSide(float lookSideRate);
 	void Action();
 	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
+	void callOpenCloseInventory();
 
 
 	//functions related to animations
@@ -43,7 +47,7 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 public:
 	AThirdPersonCharacter();
 
-	FORCEINLINE AWeaponItem* getEquipedWeapon() const {return this->equippedWeapon;} 
+	AWeaponItem* getEquipedWeapon() const {return this->equippedWeapon;} 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "equippedWeapon")
 	bool isEquippedWeapon = false;
@@ -74,13 +78,17 @@ protected:
 	float lookUpRate = 45;
 
 
+	//UI related function
+	UFUNCTION(BlueprintImplementableEvent)
+		void OpenCloseInventory();
+
 
 	//animation related function
 	UFUNCTION(BlueprintImplementableEvent)
-	void drawWeapon();
+		void drawWeapon();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void sheatheWeapon();
+		void sheatheWeapon();
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="RollAvoid")
 		bool Roll();

@@ -26,11 +26,16 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	bool isPickedUp = false;
-	
-protected:
+
 	UPROPERTY(BlueprintReadWrite, Category= "Pickup properties", meta = (allowPrivateAccess = "true"))
 	UTexture2D *Texture;
 
+	UFUNCTION(BlueprintCallable)
+	UTexture2D* getTexture() {return Texture;}
+	
+protected:
+
 	//called when item is pickedUp
     virtual void onPickedUp();
+	virtual void onEquiped();
 };

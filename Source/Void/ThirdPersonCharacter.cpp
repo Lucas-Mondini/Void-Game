@@ -76,6 +76,7 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &AThirdPersonCharacter::Action);
 	PlayerInputComponent->BindAction("WeaponDrawSheathe", IE_Pressed, this, &AThirdPersonCharacter::drawSheatheWeapon);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AThirdPersonCharacter::Dodge);
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AThirdPersonCharacter::callOpenCloseInventory);
 	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
@@ -147,36 +148,16 @@ void AThirdPersonCharacter::Action() {
 	for (int i = 0; i < Items.Num(); i++) {
 		AItem *item = Cast<AItem>(Items[i]);
 		if(item && !item->IsPendingKill()) {
+			if(Inventory->AddItem(item))
+				item->onPickedUp();
 			//if the item is a weapon and the player isn't equipped with a weapon
 			if(!equippedWeapon && item->itemType == AItem::Weapon) {
 				//the player will equip the weapon
 				equipNewWeaponBack(Cast<AWeaponItem>(item));
-				
+				item->onEquiped();
 			} 
-			GLog->Log("acao");
-			Inventory->AddItem(item);
-			
 		}
 	}
-
-	//Action outdated implementation 
-	/*
-	 * TArray<AActor*> weapons;
-	 * actionArea->GetOverlappingActors(weapons, ABaseWeapon::StaticClass());
-	 *
-	 * for(int i = 0; i < weapons.Num(); i++) {
-	 * 	ABaseWeapon* weapon = Cast<ABaseWeapon>(weapons[i]);
-	 * 	if(weapon && !weapon->IsPendingKill() && this->equippedWeapon != weapon) {
-	 * 		if(equipNewWeaponBack(weapon))
-	 * 			return;
-	 * 	}
-	 * }
-	 *
-	 * if(this->equippedWeapon)
-	 *  	UE_LOG(LogTemp, Warning, TEXT("equipped weapon = %s"), *this->equippedWeapon->GetName());
-	 * 
-	 * 	
-	 */
 }
 
 bool AThirdPersonCharacter::equipNewWeaponBack(AWeaponItem* newWeapon) {
@@ -189,6 +170,10 @@ bool AThirdPersonCharacter::equipNewWeaponBack(AWeaponItem* newWeapon) {
 	}
 	equippedWeapon->AttachToBack(this);
 	return true;
+}
+
+void AThirdPersonCharacter::callOpenCloseInventory() {
+	OpenCloseInventory();
 }
 
 bool AThirdPersonCharacter::EquipWeaponHand() {

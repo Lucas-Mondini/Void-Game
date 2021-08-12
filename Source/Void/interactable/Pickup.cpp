@@ -12,6 +12,7 @@ APickup::APickup() {
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickUp Mesh"));
 	Mesh->SetSimulatePhysics(true);
+
 }
 
 void APickup::BeginPlay() {
@@ -43,4 +44,12 @@ void APickup::onPickedUp() {
 		Mesh->SetSimulatePhysics(false);
 		Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+}
+
+void APickup::onEquiped() {
+	GLog->Log("Equiped item: " + name);
+    
+    	if(Mesh) {
+    		Mesh->SetVisibility(true);
+    	}
 }

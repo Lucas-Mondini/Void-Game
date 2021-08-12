@@ -9,6 +9,8 @@
 AWeaponItem::AWeaponItem() {
 	collisionCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CollisionCapsule"));
 	collisionCapsule->SetupAttachment(Mesh);
+
+	this->name = FString("Weapon Item");
 }
 
 

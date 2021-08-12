@@ -27,6 +27,9 @@ public:
 	void setOwner(AActor* Owner);
 
 	UFUNCTION(BlueprintCallable, Category= "Inventory")
+	TArray<class AItem *> getItems() const {return this->Items;}
+
+	UFUNCTION(BlueprintCallable, Category= "Inventory")
 	bool AddItem(class AItem *Item);
 
 	UFUNCTION(BlueprintCallable, Category= "Inventory")

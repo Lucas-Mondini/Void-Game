@@ -16,9 +16,19 @@ class VOID_API AItem : public APickup
 
 	public:
 
+	AItem();
+
 	void Action() override;
 
 	void onPickedUp() override;
+
+	void onEquiped() override;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Interactable properties", meta = (AllowPrivateAccess = "true"))
+	FString Description;
+
+	UFUNCTION(BlueprintCallable)
+	FString getDescription() const {return Description;}
 
 	enum ItemType
 	{

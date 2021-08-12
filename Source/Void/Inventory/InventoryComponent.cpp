@@ -1,4 +1,6 @@
 #include "InventoryComponent.h"
+
+#include "Void/ThirdPersonCharacter.h"
 #include "Void/interactable/Item.h"
 
 UInventoryComponent::UInventoryComponent() {
@@ -17,13 +19,8 @@ void UInventoryComponent::BeginPlay()
 }
 
 bool UInventoryComponent::AddItem(AItem *Item) {
-
-	if(Item) {
-		//if(!Item->isPickedUp)
-			//Item->onPickedUp();
-		
+	if(Item && Items.Find(Item) == -1) {
 		Items.Add(Item);
-		//updateUI
 		return true;
 	}
 	return false;
