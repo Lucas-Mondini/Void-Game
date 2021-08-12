@@ -34,4 +34,21 @@ void AInteractable::Interact() {
 	GLog->Log("Interacting: " + this->name);
 }
 
+void AInteractable::setName(FString newName) {
+	GLog->Log("new name " + newName);
+	this->name = newName;
+}
+
+void AInteractable::setHelpText(FString newHelpText) {
+	this->helpText = newHelpText;
+}
+
+void AInteractable::setMesh(UStaticMeshComponent* newMesh) {
+	this->Mesh = newMesh;
+}
+
+FString AInteractable::getName() {
+	return this->name;
+}
+
 

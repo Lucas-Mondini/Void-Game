@@ -27,8 +27,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	bool isPickedUp = false;
 
-	UPROPERTY(BlueprintReadWrite, Category= "Pickup properties", meta = (allowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category= "Pickup properties", meta = (allowPrivateAccess = "true"))
 	UTexture2D *Texture;
+
+	UFUNCTION(BlueprintCallable, Category= "Pickup properties")
+	void setTexture(UTexture2D *newTexture);
 
 	UFUNCTION(BlueprintCallable)
 	UTexture2D* getTexture() {return Texture;}

@@ -24,8 +24,11 @@ class VOID_API AItem : public APickup
 
 	void onEquiped() override;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Interactable properties", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Interactable properties", meta = (AllowPrivateAccess = "true"))
 	FString Description;
+
+	UFUNCTION(BlueprintCallable)
+	void setDescription(FString newDescription);
 
 	UFUNCTION(BlueprintCallable)
 	FString getDescription() const {return Description;}

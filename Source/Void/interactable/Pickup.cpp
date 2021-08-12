@@ -7,12 +7,13 @@
 
 
 APickup::APickup() {
-	name = FString("Pickup Base");
-	helpText = "Press " + getActionKey() + " To pickup ";
+	setName(FString("Pickup Base"));
+	setHelpText(FString("Press " + getActionKey() + " To pickup "));
 	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickUp Mesh"));
-	Mesh->SetSimulatePhysics(true);
+	UStaticMeshComponent *mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickUp Mesh"));
+	mesh->SetSimulatePhysics(true);
 
+	setMesh(mesh);
 }
 
 void APickup::BeginPlay() {
@@ -32,6 +33,10 @@ void APickup::Interact() {
 void APickup::Action() {
 	Interact();
 	onPickedUp();
+}
+
+void APickup::setTexture(UTexture2D* newTexture) {
+	this->Texture = newTexture;
 }
 
 void APickup::onPickedUp() {

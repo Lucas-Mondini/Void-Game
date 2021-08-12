@@ -4,8 +4,8 @@
 #include "Item.h"
 
 AItem::AItem() {
-	Description = FString("This is the item description");
-	name = FString("Item");
+	setName(FString("Item base"));
+	setDescription(FString("This is the item description"));
 }
 
 void AItem::Action() {
@@ -17,4 +17,8 @@ void AItem::onPickedUp() {
 
 void AItem::onEquiped() {
 	Super::onEquiped();
+}
+
+void AItem::setDescription(FString newDescription) {
+	this->Description = newDescription;
 }
