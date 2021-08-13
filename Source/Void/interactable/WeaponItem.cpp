@@ -24,3 +24,8 @@ inline void AWeaponItem::AttachToBack(AThirdPersonCharacter* Character) {
 inline void AWeaponItem::AttachToHand(AThirdPersonCharacter* Character) {
 	this->AttachToComponent(Character->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("DefaultWeapon_hand"));
 }
+
+void AWeaponItem::DetachFromCharacter(AThirdPersonCharacter* Character) {
+	this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	this->onPickedUp();
+}

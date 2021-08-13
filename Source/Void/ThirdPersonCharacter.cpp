@@ -145,25 +145,18 @@ void AThirdPersonCharacter::Action() {
 
 	TArray<AActor*> Items;
 	actionArea->GetOverlappingActors(Items, AItem::StaticClass());
-	for (int i = 0; i < Items.Num(); i++) {
-		AItem *item = Cast<AItem>(Items[i]);
-		if(item && !item->IsPendingKill()) {
-			if(Inventory->AddItem(item))
-				item->onPickedUp();
-			//if the item is a weapon and the player isn't equipped with a weapon
-			if(!equippedWeapon && item->itemType == AItem::Weapon) {
-				//the player will equip the weapon
-				equipNewWeaponBack(Cast<AWeaponItem>(item));
-				item->onEquiped();
-			} 
-		}
-	}
+	addItemsToInventory(Items);
 }
 
 bool AThirdPersonCharacter::equipNewWeaponBack(AWeaponItem* newWeapon) {
 	UE_LOG(LogTemp, Warning, TEXT("object name = %s"), *newWeapon->GetName());
 	try {
+		if(this->equippedWeapon && this->equippedWeapon != newWeapon) {
+			addItemsToInventory(equippedWeapon);
+			equippedWeapon->DetachFromCharacter(this);
+		}
 		this->equippedWeapon = newWeapon;
+		newWeapon->onEquiped();
 	} catch (int e) {
 		UE_LOG(LogTemp, Error, TEXT("An error ocurred on equip weapon code: %i"), e);
 		return false;
@@ -198,4 +191,27 @@ bool AThirdPersonCharacter::EquipWeaponBack() {
 		UE_LOG(LogTemp, Warning, TEXT("no weapon equiped"));
 	}
 	return false;
+}
+
+void AThirdPersonCharacter::addItemsToInventory(TArray<AActor*> Items) {
+	for (int i = 0; i < Items.Num(); i++) {
+		AItem *item = Cast<AItem>(Items[i]);
+		if(item && !item->IsPendingKill()) {
+			if(Inventory->AddItem(item))
+				item->onPickedUp();
+			//if the item is a weapon and the player isn't equipped with a weapon
+			if(!equippedWeapon && item->itemType == AItem::Weapon) {
+				//the player will equip the weapon
+				equipNewWeaponBack(Cast<AWeaponItem>(item));
+				item->onEquiped();
+			} 
+		}
+	}
+}
+
+void AThirdPersonCharacter::addItemsToInventory(AItem* Item) {
+	if(Item && !Item->IsPendingKill()) {
+		if(Inventory->AddItem(Item))
+			Item->onPickedUp();
+	}
 }

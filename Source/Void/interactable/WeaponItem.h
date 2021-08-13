@@ -31,6 +31,8 @@ class VOID_API AWeaponItem : public AItem
 
 	void AttachToHand(class AThirdPersonCharacter* Character);
 
+	void DetachFromCharacter(class AThirdPersonCharacter* Character);
+
 	//by default the weapon type is a great Sword
 	WeaponType weaponType  = WeaponType::GreatSword;
 };

@@ -34,6 +34,8 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void LookUp(float lookUpRate);
 	void LookSide(float lookSideRate);
 	void Action();
+
+	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
 	void callOpenCloseInventory();
 
@@ -43,6 +45,10 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 		bool EquipWeaponHand();
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 		bool EquipWeaponBack();
+
+		void addItemsToInventory(TArray<AActor*> Items);
+	UFUNCTION(BlueprintCallable, Category="equip Weapon")
+		void addItemsToInventory(class AItem* Item);
 	
 public:
 	AThirdPersonCharacter();
