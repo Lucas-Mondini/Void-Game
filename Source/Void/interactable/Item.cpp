@@ -22,3 +22,11 @@ void AItem::onEquiped() {
 void AItem::setDescription(FString newDescription) {
 	this->Description = newDescription;
 }
+
+void AItem::setEquippedOwner(AThirdPersonCharacter* newEquippedOwner) {
+	this->EquippedOwner = newEquippedOwner;
+}
+
+AThirdPersonCharacter* AItem::getEquippedOwner() {
+	return this->EquippedOwner;
+}

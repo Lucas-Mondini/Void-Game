@@ -13,18 +13,41 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class AWeaponItem* equippedWeapon = nullptr;
+
+	
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool rolling = false;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool avoiding = false;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool attacking = false;
+
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool inventoryOpened = false;
+	
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool canMove = true;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool canDodge = true;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool canAttack = true;
+
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category="Attack Count")
+	int attackCount = 0;
+	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category="Attack Count")
+	bool canResetAttackCount = false;
+
+
+	
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "Inventory", meta = (AllowPrivateAccess = "true"))
 	class UInventoryComponent* Inventory;
@@ -35,10 +58,14 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void LookSide(float lookSideRate);
 	void Action();
 
+	void callOpenCloseInventory();
+	void drawSheatheWeapon();
+	void Dodge();
+	void weakAttack_implementation();
+	void strongAttack_implementation();
+
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
-	void callOpenCloseInventory();
-
 
 	//functions related to animations
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
@@ -61,8 +88,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,  Category = "isInAnimation")
 	bool isInDrawSheatheAnim = false;
 
-	void drawSheatheWeapon();
-	void Dodge();
 
 	
 protected:
@@ -95,6 +120,12 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void sheatheWeapon();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Attack")
+		void weakAttack();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Attack")
+		void strongAttack();
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="RollAvoid")
 		bool Roll();

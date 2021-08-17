@@ -77,6 +77,8 @@ void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("WeaponDrawSheathe", IE_Pressed, this, &AThirdPersonCharacter::drawSheatheWeapon);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AThirdPersonCharacter::Dodge);
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AThirdPersonCharacter::callOpenCloseInventory);
+	PlayerInputComponent->BindAction("Weak_Attack", IE_Pressed, this, &AThirdPersonCharacter::weakAttack_implementation);
+	PlayerInputComponent->BindAction("Strong_Attack", IE_Pressed, this, &AThirdPersonCharacter::strongAttack_implementation);
 	
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
@@ -125,18 +127,16 @@ void AThirdPersonCharacter::LookSide(float lookRate) {
 void AThirdPersonCharacter::Dodge() {
 	float y = InputComponent->GetAxisValue("MoveFront");
 	float x = InputComponent->GetAxisValue("MoveRight");
-	if(x || y) {
-		if(canDodge) {
-			canMove = false;		
-			Roll();
-			canDodge = false;
+	if(canDodge && isEquippedWeapon) {
+		if(x || y) {
+				canMove = false;		
+				Roll();
+				canDodge = false;
 		}
-	}
-	else {
-		if(canDodge) {
-			canMove = false;
-			Avoid();
-			canDodge = false;
+		else {
+				canMove = false;
+				Avoid();
+				canDodge = false;
 		}
 	}
 }
@@ -157,6 +157,7 @@ bool AThirdPersonCharacter::equipNewWeaponBack(AWeaponItem* newWeapon) {
 		}
 		this->equippedWeapon = newWeapon;
 		newWeapon->onEquiped();
+		newWeapon->setEquippedOwner(this);
 	} catch (int e) {
 		UE_LOG(LogTemp, Error, TEXT("An error ocurred on equip weapon code: %i"), e);
 		return false;
@@ -214,4 +215,19 @@ void AThirdPersonCharacter::addItemsToInventory(AItem* Item) {
 		if(Inventory->AddItem(Item))
 			Item->onPickedUp();
 	}
+}
+
+
+void AThirdPersonCharacter::weakAttack_implementation() {
+	if(canAttack && !inventoryOpened) {
+		attacking = true;
+		weakAttack(); 
+	}	
+}
+
+void AThirdPersonCharacter::strongAttack_implementation() {
+	if(canAttack && !inventoryOpened) {
+		attacking = true;
+		strongAttack();
+	}	
 }

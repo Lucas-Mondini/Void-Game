@@ -14,6 +14,9 @@ class VOID_API AItem : public APickup
 {
 	GENERATED_BODY()
 
+	UPROPERTY(BlueprintReadOnly, Category="Owner", meta = (AllowPrivateAccess = "true"))
+	class AThirdPersonCharacter *EquippedOwner;
+
 	public:
 
 	AItem();
@@ -32,6 +35,12 @@ class VOID_API AItem : public APickup
 
 	UFUNCTION(BlueprintCallable)
 	FString getDescription() const {return Description;}
+
+	UFUNCTION(BlueprintCallable)
+	void setEquippedOwner(class AThirdPersonCharacter *newEquippedOwner);
+	
+	UFUNCTION(BlueprintCallable)
+	class AThirdPersonCharacter* getEquippedOwner();
 
 	enum ItemType
 	{
