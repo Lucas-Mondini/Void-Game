@@ -1,14 +1,20 @@
 
 
 #include "ThirdPersonCharacter.h"
+
+#include "CharacterAttributes.h"
+#include "CharacterStatus.h"
+#include "Inventory/InventoryComponent.h"
+
+#include "interactable/Item.h"
+#include "interactable/WeaponItem.h"
+#include "Weapon/BaseWeapon.h"
+
+
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "interactable/Item.h"
-#include "interactable/WeaponItem.h"
-#include "Inventory/InventoryComponent.h"
-#include "Weapon/BaseWeapon.h"
 
 AThirdPersonCharacter::AThirdPersonCharacter() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -27,6 +33,9 @@ AThirdPersonCharacter::AThirdPersonCharacter() {
 
 	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 	Inventory->setOwner(this);
+
+	Status = CreateDefaultSubobject<UCharacterStatus>(TEXT("Status"));
+	Attributes = CreateDefaultSubobject<UCharacterAttributes>(TEXT("Attributes"));
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
