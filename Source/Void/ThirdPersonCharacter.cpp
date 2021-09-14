@@ -53,6 +53,11 @@ void AThirdPersonCharacter::BeginPlay() {
 void AThirdPersonCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	if(Status->HP <= 0) {
+		Die();
+		GLog->Log("Morri");
+	}
+
 }
 
 void AThirdPersonCharacter::drawSheatheWeapon() {
@@ -72,6 +77,13 @@ void AThirdPersonCharacter::drawSheatheWeapon() {
 		}
 }
 
+
+bool AThirdPersonCharacter::TakeDamage(int damage) {
+	this->Status->HP -= damage;
+	if (this->Status->HP > 0)
+		return false;
+	return true;
+}
 
 void AThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -239,4 +251,16 @@ void AThirdPersonCharacter::strongAttack_implementation() {
 		attacking = true;
 		strongAttack();
 	}	
+}
+
+void AThirdPersonCharacter::Die() {
+	FTimerDelegate TimerDel;
+     
+	FTimerHandle TimerHandle;
+ 
+	//Binding the function with specific values
+	TimerDel.BindUFunction(this, FName("Destroy"));
+	
+	PlayAnimMontage(DeathAnimation, 1, NAME_None);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, DeathAnimation->GetPlayLength(), false);
 }

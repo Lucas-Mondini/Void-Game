@@ -14,6 +14,11 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class AWeaponItem* equippedWeapon = nullptr;
 
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DeathAnimation = nullptr;
+
 	
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -73,6 +78,9 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
 
+	UFUNCTION(BlueprintCallable, Category="Die")
+	void Die();
+
 	//functions related to animations
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 		bool EquipWeaponHand();
@@ -121,6 +129,14 @@ protected:
 
 
 	//animation related function
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, meta = (AllowPrivateAccess = "true"))
+		void ActionChangeSwordHand();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, meta = (AllowPrivateAccess = "true"))
+		void ActionChangeSwordBack();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, meta = (AllowPrivateAccess = "true"))
+		void ProcessEndedAttack();
+	
 	UFUNCTION(BlueprintImplementableEvent)
 		void drawWeapon();
 
@@ -144,6 +160,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float yawRotationFactor = 540.0f;
+
+	UFUNCTION(BlueprintCallable)
+	bool TakeDamage(int damage);
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
