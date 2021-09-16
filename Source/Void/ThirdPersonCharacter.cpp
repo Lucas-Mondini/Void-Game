@@ -2,6 +2,8 @@
 
 #include "ThirdPersonCharacter.h"
 
+#include <string>
+
 #include "CharacterAttributes.h"
 #include "CharacterStatus.h"
 #include "Inventory/InventoryComponent.h"
@@ -53,9 +55,8 @@ void AThirdPersonCharacter::BeginPlay() {
 void AThirdPersonCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if(Status->HP <= 0) {
+	if(Status->HP <= 0 && !dead) {
 		Die();
-		GLog->Log("Morri");
 	}
 
 }
@@ -79,7 +80,9 @@ void AThirdPersonCharacter::drawSheatheWeapon() {
 
 
 bool AThirdPersonCharacter::TakeDamage(int damage) {
+	GLog->Log(FString::FromInt(damage));
 	this->Status->HP -= damage;
+	GLog->Log("HP = " + this->Status->HP);
 	if (this->Status->HP > 0)
 		return false;
 	return true;
@@ -195,6 +198,11 @@ bool AThirdPersonCharacter::EquipWeaponHand() {
 	if(this->equippedWeapon) {
 		UE_LOG(LogTemp, Warning, TEXT("object name = %s"), *this->equippedWeapon->GetName());
 		this->equippedWeapon->AttachToHand(this);
+		try {
+			this->equippedWeapon->Equiped(this);
+		} catch (std::exception e) {
+			GLog->Log(e.what());
+		}
 		return true;
 	}
 	else {
@@ -254,13 +262,16 @@ void AThirdPersonCharacter::strongAttack_implementation() {
 }
 
 void AThirdPersonCharacter::Die() {
-	FTimerDelegate TimerDel;
+    dead = true;
+	
      
 	FTimerHandle TimerHandle;
- 
-	//Binding the function with specific values
-	TimerDel.BindUFunction(this, FName("Destroy"));
 	
+
 	PlayAnimMontage(DeathAnimation, 1, NAME_None);
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, DeathAnimation->GetPlayLength(), false);
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {
+		this->Destroy();
+	}, DeathAnimation->GetPlayLength(), 1);
+	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, , DeathAnimation->GetPlayLength(), false);
 }

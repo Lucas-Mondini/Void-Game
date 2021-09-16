@@ -20,6 +20,8 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	UAnimMontage* DeathAnimation = nullptr;
 
 	
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+    bool dead = false;
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool rolling = false;
@@ -163,6 +165,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool TakeDamage(int damage);
+
+	FORCEINLINE bool getIsAttacking() const {
+		 return this->attacking;
+	}
+	FORCEINLINE class UCharacterAttributes* getAttributes() const {
+		return this->Attributes;
+	}
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

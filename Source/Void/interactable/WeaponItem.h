@@ -36,8 +36,17 @@ class VOID_API AWeaponItem : public AItem
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* collisionCapsule;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class AThirdPersonCharacter* equipping;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "Status and Attributes", meta = (AllowPrivateAccess = "true"))
+	class UWeaponAttributes* Attributes;
+
 	public:
 	void AttachToBack(class AThirdPersonCharacter* Character);
+
+	void Equiped(class AThirdPersonCharacter* player);
+	void onUnquiped();
 
 	void AttachToHand(class AThirdPersonCharacter* Character);
 
@@ -60,6 +69,18 @@ class VOID_API AWeaponItem : public AItem
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	FMaxComboCount comboCount;
 
+	UFUNCTION()
+	void OnOverlap( 
+	UPrimitiveComponent* OverlappedComp,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult );
+
+	protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	int ProcessDamage(class AThirdPersonCharacter *Enemy, FVector2D Damage);
 	
 };
 

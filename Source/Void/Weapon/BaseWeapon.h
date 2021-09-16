@@ -15,6 +15,18 @@ class VOID_API ABaseWeapon : public AActor
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* collisionCapsule;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class AThirdPersonCharacter* equipping;
+
+	UFUNCTION()
+	void OnOverlap( 
+	UPrimitiveComponent* OverlappedComp,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult );
 	
 public:	
 	ABaseWeapon();

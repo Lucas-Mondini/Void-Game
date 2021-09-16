@@ -19,6 +19,7 @@ ABaseWeapon::ABaseWeapon()
 	
 	collisionCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CollisionCapsule"));
 	collisionCapsule->SetupAttachment(weaponMesh);
+	collisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABaseWeapon::OnOverlap);
 
 
 
@@ -48,3 +49,9 @@ void ABaseWeapon::Tick(float DeltaTime)
 
 }
 
+void ABaseWeapon::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	GLog->Log(OtherActor->GetFName().ToString());
+	GLog->Log("Bateu");
+}
