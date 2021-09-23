@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Item.h"
+#include "Void/interactable/Item.h"
 #include "WeaponItem.generated.h"
 
 enum WeaponType

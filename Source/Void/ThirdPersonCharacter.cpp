@@ -2,15 +2,12 @@
 
 #include "ThirdPersonCharacter.h"
 
-#include <string>
-
 #include "CharacterAttributes.h"
 #include "CharacterStatus.h"
 #include "Inventory/InventoryComponent.h"
 
 #include "interactable/Item.h"
-#include "interactable/WeaponItem.h"
-#include "Weapon/BaseWeapon.h"
+#include "interactable/Weapon/WeaponItem.h"
 
 
 #include "Camera/CameraComponent.h"
@@ -55,9 +52,12 @@ void AThirdPersonCharacter::BeginPlay() {
 void AThirdPersonCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	accumulatedTime+=DeltaTime;
+	
 	if(Status->HP <= 0 && !dead) {
 		Die();
 	}
+	RecoverStamina();
 
 }
 
@@ -261,6 +261,16 @@ void AThirdPersonCharacter::strongAttack_implementation() {
 	}	
 }
 
+void AThirdPersonCharacter::RecoverStamina() {
+	
+	if(accumulatedTime / 200) {
+		if(canRecoveryStamina)
+			this->Status->RecoverStamina();
+		accumulatedTime = 0;
+		GLog->Log("Recovering");
+	}
+}
+
 void AThirdPersonCharacter::Die() {
     dead = true;
 	
@@ -272,6 +282,6 @@ void AThirdPersonCharacter::Die() {
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {
 		this->Destroy();
-	}, DeathAnimation->GetPlayLength(), 1);
+	}, DeathAnimation->GetPlayLength()/1.5, 0);
 	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, , DeathAnimation->GetPlayLength(), false);
 }

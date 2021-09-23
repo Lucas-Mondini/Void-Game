@@ -45,6 +45,10 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool canAttack = true;
+	
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool canRecoveryStamina = true;
 
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category="Attack Count")
@@ -76,6 +80,7 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void Dodge();
 	void weakAttack_implementation();
 	void strongAttack_implementation();
+	void RecoverStamina();
 
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
@@ -96,7 +101,7 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 public:
 	AThirdPersonCharacter();
 
-	AWeaponItem* getEquipedWeapon() const {return this->equippedWeapon;} 
+	AWeaponItem* GetEquippedWeapon() const {return this->equippedWeapon;} 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "equippedWeapon")
 	bool isEquippedWeapon = false;
@@ -159,6 +164,7 @@ protected:
 	
 public:	
 	virtual void Tick(float DeltaTime) override;
+	float accumulatedTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float yawRotationFactor = 540.0f;
