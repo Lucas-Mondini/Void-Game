@@ -51,6 +51,20 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
 	bool isAtMaxBalance = true;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
+	bool canLoseHP = true;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
+	bool canLoseStamina = true;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
+	bool canLoseBalance = true;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
+	int ClowdownMilisecondsHP = 1000;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
+	int ClowdownMilisecondsStamina = 1000;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Character Status")
+	int ClowdownMilisecondsBalance = 1000;
+
 
 	UFUNCTION(BlueprintCallable)
 	void RecoverHP(int RecoveryFactor);
@@ -58,10 +72,17 @@ public:
 	void RecoverMP(int RecoveryFactor);
 	UFUNCTION(BlueprintCallable)
 	void RecoverStamina(int RecoveryFactor);
-	void RecoverStamina();
 	UFUNCTION(BlueprintCallable)
 	void RecoverBalance(int RecoveryFactor);
-	void RecoverBalance();
+
+	UFUNCTION(BlueprintCallable)
+	void LoseHP(int LostHP);
+	UFUNCTION(BlueprintCallable)
+	void LoseMP(int LostMP);
+	UFUNCTION(BlueprintCallable)
+	void LoseStamina(int LostStamina);
+	UFUNCTION(BlueprintCallable)
+	void LoseBalance(int LostBalance);
 
 protected:
 	virtual void BeginPlay() override;

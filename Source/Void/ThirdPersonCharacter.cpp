@@ -46,13 +46,13 @@ AThirdPersonCharacter::AThirdPersonCharacter() {
 }
 void AThirdPersonCharacter::BeginPlay() {
 	Super::BeginPlay();
-	
+	GetWorldTimerManager().SetTimer(StatusRecoveryTimerHandle, this, &AThirdPersonCharacter::RecoverStaminaAndBalance, RecoveryRate, true, 0.5f);
+	Status->BalanceRecoveryRate = 5;
+	Status->StaminaRecoveryRate = 5;
 }
 
 void AThirdPersonCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
-	accumulatedTime+=DeltaTime;
 	
 	if(Status->HP <= 0 && !dead) {
 		Die();
@@ -81,7 +81,10 @@ void AThirdPersonCharacter::drawSheatheWeapon() {
 
 bool AThirdPersonCharacter::TakeDamage(int damage) {
 	GLog->Log(FString::FromInt(damage));
-	this->Status->HP -= damage;
+	
+	this->Status->LoseBalance(5);
+	
+	this->Status->LoseHP(damage);
 	GLog->Log("HP = " + this->Status->HP);
 	if (this->Status->HP > 0)
 		return false;
@@ -261,14 +264,17 @@ void AThirdPersonCharacter::strongAttack_implementation() {
 	}	
 }
 
+void AThirdPersonCharacter::RecoverStaminaAndBalance() {
+	RecoverStamina();
+	RecoverBalance();
+}
+
 void AThirdPersonCharacter::RecoverStamina() {
-	
-	if(accumulatedTime / 200) {
-		if(canRecoveryStamina)
-			this->Status->RecoverStamina();
-		accumulatedTime = 0;
-		GLog->Log("Recovering");
-	}
+	this->Status->RecoverStamina(Status->StaminaRecoveryRate);
+}
+
+void AThirdPersonCharacter::RecoverBalance() {
+	this->Status->RecoverBalance(Status->BalanceRecoveryRate);
 }
 
 void AThirdPersonCharacter::Die() {

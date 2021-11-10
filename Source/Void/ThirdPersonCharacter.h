@@ -11,6 +11,8 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	FTimerHandle StatusRecoveryTimerHandle;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class AWeaponItem* equippedWeapon = nullptr;
 
@@ -18,6 +20,9 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* DeathAnimation = nullptr;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DamageAnimation = nullptr;
 
 	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -80,7 +85,10 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	void Dodge();
 	void weakAttack_implementation();
 	void strongAttack_implementation();
+
+	void RecoverStaminaAndBalance();
 	void RecoverStamina();
+	void RecoverBalance();
 
 	UFUNCTION(BlueprintCallable, Category="equip Weapon")
 	bool equipNewWeaponBack(class AWeaponItem* newWeapon);
@@ -164,7 +172,9 @@ protected:
 	
 public:	
 	virtual void Tick(float DeltaTime) override;
-	float accumulatedTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RecoveryRate = 0.3f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float yawRotationFactor = 540.0f;
