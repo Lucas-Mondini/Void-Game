@@ -13,11 +13,6 @@ class VOID_API UWeaponAttributes : public UActorComponent
 	GENERATED_BODY()
 	
 public:	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Weapon Base Damage")
-	int WeakAttackBaseDamage = 10;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Weapon Base Damage")
-	int HeavyAttackBaseDamage = 15;
-
 	//Scales
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Weapon Scale Multiplier")
 	int VitalityMultiplier = 0;
@@ -38,7 +33,7 @@ public:
 
 	//@returns X to weak and Y t heavy
 	UFUNCTION(BlueprintCallable)
-	FVector2D CalculateDamage(class UCharacterAttributes* Attributes);
+	float CalculateDamageScale(class UCharacterAttributes* Attributes);
 
 	
 	UWeaponAttributes();

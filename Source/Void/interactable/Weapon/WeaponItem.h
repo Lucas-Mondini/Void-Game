@@ -33,6 +33,16 @@ class VOID_API AWeaponItem : public AItem
 
 	AWeaponItem();
 
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category= "Attack Type")
+	bool Weak;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category= "Attack Type")
+	bool Strong;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"), Category= "Damage")
+	float __WeakDamageMultiplierValue = 1.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"), Category= "Damage")
+	float __StrongDamageMultiplierValue = 1.2f;
+	
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* collisionCapsule;
 
@@ -41,6 +51,9 @@ class VOID_API AWeaponItem : public AItem
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "Status and Attributes", meta = (AllowPrivateAccess = "true"))
 	class UWeaponAttributes* Attributes;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category= "Status and Attributes", meta = (AllowPrivateAccess = "true"))
+	class UDamageComponent* Damage;
 
 	public:
 	void AttachToBack(class AThirdPersonCharacter* Character);
@@ -69,6 +82,7 @@ class VOID_API AWeaponItem : public AItem
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	FMaxComboCount comboCount;
 
+	
 	UFUNCTION()
 	void OnOverlap( 
 	UPrimitiveComponent* OverlappedComp,
@@ -79,8 +93,8 @@ class VOID_API AWeaponItem : public AItem
 	const FHitResult& SweepResult );
 
 	protected:
-	UFUNCTION(BlueprintImplementableEvent)
-	int ProcessDamage(class AThirdPersonCharacter *Enemy, FVector2D Damage);
+	UFUNCTION(BlueprintCallable)
+	void ProcessDamage(class AThirdPersonCharacter *Enemy, float Scale);
 	
 };
 

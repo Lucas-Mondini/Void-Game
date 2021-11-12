@@ -3,6 +3,7 @@
 
 #include "WeaponItem.h"
 
+#include "DamageComponent.h"
 #include "WeaponAttributes.h"
 #include "Components/CapsuleComponent.h"
 #include "Void/ThirdPersonCharacter.h"
@@ -15,7 +16,8 @@ AWeaponItem::AWeaponItem() {
 	setName(FString("Weapon Item Base"));
 	setDescription(FString("This is the Weapon Item Base description"));
 
-	Attributes = CreateDefaultSubobject<UWeaponAttributes>(TEXT("WeaponAttributes"));
+	Attributes	= CreateDefaultSubobject<UWeaponAttributes>(TEXT("WeaponAttributes"));
+	Damage		= CreateDefaultSubobject<UDamageComponent>(TEXT("DamageComponent"));
 }
 
 
@@ -37,9 +39,20 @@ void AWeaponItem::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
                             int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	AThirdPersonCharacter* hitted = Cast<AThirdPersonCharacter>(OtherActor);
 	if(equipping && hitted && equipping->getIsAttacking() && hitted != equipping) {
-			GLog->Log("tocou em " + OtherActor->GetFName().ToString());
-			ProcessDamage(hitted, Attributes->CalculateDamage(equipping->getAttributes()));
+			GLog->Log("Tocou em " + OtherActor->GetFName().ToString());
+			ProcessDamage(hitted, Attributes->CalculateDamageScale(equipping->getAttributes()));
 	}
+}
+
+void AWeaponItem::ProcessDamage(AThirdPersonCharacter* Enemy, float Scale) {
+	this->Damage->SetScaleMultiplier(Scale);
+
+	if(Weak) {
+		Damage->SetDamageMultiplier(__WeakDamageMultiplierValue);
+	} else if (Strong) {
+		Damage->SetDamageMultiplier(__StrongDamageMultiplierValue);
+	}
+	Enemy->TakeDamage(Damage);
 }
 
 inline void AWeaponItem::AttachToHand(AThirdPersonCharacter* Character) {

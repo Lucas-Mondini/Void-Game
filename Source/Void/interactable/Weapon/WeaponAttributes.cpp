@@ -20,8 +20,10 @@ void UWeaponAttributes::BeginPlay()
 	
 }
 
-FVector2D UWeaponAttributes::CalculateDamage(UCharacterAttributes* Attributes) {
-	FVector2D damage;
+float UWeaponAttributes::CalculateDamageScale(UCharacterAttributes* Attributes) {
 	//needs implementation
-	return FVector2D(WeakAttackBaseDamage, HeavyAttackBaseDamage);
+	float D_Scale = 1;
+
+	//will return the scale value to the damageComponentMultiplication
+	return D_Scale;
 }

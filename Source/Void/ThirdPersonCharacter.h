@@ -73,6 +73,9 @@ class VOID_API AThirdPersonCharacter : public ACharacter
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "Status and Attributes", meta = (AllowPrivateAccess = "true"))
     class UCharacterAttributes* Attributes;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category= "Status and Attributes", meta = (AllowPrivateAccess = "true"))
+	class UDamageComponent *Resistances;
 
 	void MoveForward(float MoveRate);
 	void MoveRight(float MoveRate);
@@ -180,7 +183,7 @@ public:
 	float yawRotationFactor = 540.0f;
 
 	UFUNCTION(BlueprintCallable)
-	bool TakeDamage(int damage);
+	bool TakeDamage(class UDamageComponent *damage);
 
 	FORCEINLINE bool getIsAttacking() const {
 		 return this->attacking;

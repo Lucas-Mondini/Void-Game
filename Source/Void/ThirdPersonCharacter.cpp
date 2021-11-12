@@ -14,6 +14,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "interactable/Weapon/DamageComponent.h"
 
 AThirdPersonCharacter::AThirdPersonCharacter() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,8 +34,9 @@ AThirdPersonCharacter::AThirdPersonCharacter() {
 	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 	Inventory->setOwner(this);
 
-	Status = CreateDefaultSubobject<UCharacterStatus>(TEXT("Status"));
-	Attributes = CreateDefaultSubobject<UCharacterAttributes>(TEXT("Attributes"));
+	Status		= CreateDefaultSubobject<UCharacterStatus>(TEXT("Status"));
+	Attributes	= CreateDefaultSubobject<UCharacterAttributes>(TEXT("Attributes"));
+	Resistances = CreateDefaultSubobject<UDamageComponent>(TEXT("Resistances"));
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -79,12 +81,14 @@ void AThirdPersonCharacter::drawSheatheWeapon() {
 }
 
 
-bool AThirdPersonCharacter::TakeDamage(int damage) {
-	GLog->Log(FString::FromInt(damage));
+bool AThirdPersonCharacter::TakeDamage(UDamageComponent* damage) {
+	//Here will do de calculations of defense and the damage values
+
+	int FinalDamage = damage->CalculateDamage(this->Resistances);
 	
-	this->Status->LoseBalance(5);
+	this->Status->LoseBalance(damage->CalculateDamage(this->Resistances));
 	
-	this->Status->LoseHP(damage);
+	this->Status->LoseHP(FinalDamage);
 	GLog->Log("HP = " + this->Status->HP);
 	if (this->Status->HP > 0)
 		return false;
